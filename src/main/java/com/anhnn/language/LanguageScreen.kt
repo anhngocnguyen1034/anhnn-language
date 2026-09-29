@@ -63,10 +63,19 @@ private fun LockPortrait() {
     }
 }
 
+/**
+ * Màn chọn ngôn ngữ app.
+ *
+ * [isFirstSetup] bật khi đây là lần chọn ngôn ngữ ĐẦU TIÊN (sau splash, trước khi vào app).
+ * Lúc đó nút xác nhận phải bấm được ngay cả khi người dùng giữ nguyên ngôn ngữ đang chọn sẵn
+ * — nếu không, ai muốn dùng đúng ngôn ngữ mặc định sẽ không có đường nào đi tiếp. Ở màn đổi
+ * ngôn ngữ trong Cài đặt thì để mặc định `false`: chưa đổi gì thì không có gì để lưu.
+ */
 @Composable
 fun LanguageScreen(
     onBack: () -> Unit,
-    onLanguageSaved: (langCode: String) -> Unit = {}
+    onLanguageSaved: (langCode: String) -> Unit = {},
+    isFirstSetup: Boolean = false,
 ) {
     LockPortrait()
     val context = LocalContext.current
@@ -144,7 +153,8 @@ fun LanguageScreen(
                     )
                 }
 
-                val canConfirm = selectedLanguageCode != null && selectedLanguageCode != currentLanguageCode
+                val canConfirm = selectedLanguageCode != null &&
+                    (isFirstSetup || selectedLanguageCode != currentLanguageCode)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
